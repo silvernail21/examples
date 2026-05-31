@@ -7,13 +7,18 @@ const principles = [
 ]
 
 export default function Testimonials() {
-  const ref = useRef(null)
   const quoteRef = useRef(null)
+  const gridWrapRef = useRef(null)
 
   useEffect(() => {
-    const els = [ref.current, quoteRef.current].filter(Boolean)
+    const els = [quoteRef.current, gridWrapRef.current].filter(Boolean)
     const observer = new IntersectionObserver(
-      (entries) => entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in-view'); observer.unobserve(e.target) } }),
+      (entries) => entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.remove('opacity-0', 'translate-y-8')
+          observer.unobserve(e.target)
+        }
+      }),
       { threshold: 0.1 }
     )
     els.forEach(el => observer.observe(el))
@@ -26,7 +31,7 @@ export default function Testimonials() {
 
         <div
           ref={quoteRef}
-          className="opacity-0 translate-y-8 transition-all duration-700 [.in-view_&]:opacity-100 [.in-view_&]:translate-y-0 mb-24 border-b border-border pb-24"
+          className="opacity-0 translate-y-8 transition-all duration-700 mb-24 border-b border-border pb-24"
         >
           <div className="flex items-center gap-4 mb-8">
             <div className="w-8 h-px bg-accent" aria-hidden="true" />
@@ -41,13 +46,13 @@ export default function Testimonials() {
         </div>
 
         <div
-          ref={ref}
-          className="grid md:grid-cols-3 gap-px bg-border opacity-0 translate-y-8 transition-all duration-700 [.in-view_&]:opacity-100 [.in-view_&]:translate-y-0"
+          ref={gridWrapRef}
+          className="opacity-0 translate-y-8 transition-all duration-700 grid md:grid-cols-3 gap-px bg-border"
         >
           {principles.map(({ title, body }, i) => (
             <div
               key={title}
-              className="bg-surface-2 p-10 opacity-0 translate-y-4 transition-all duration-700 [.in-view_&]:opacity-100 [.in-view_&]:translate-y-0"
+              className="bg-surface-2 p-8 sm:p-10"
               style={{ transitionDelay: `${i * 120 + 100}ms` }}
             >
               <div className="w-8 h-px bg-accent mb-6" aria-hidden="true" />

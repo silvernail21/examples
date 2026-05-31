@@ -40,7 +40,12 @@ export default function RoleCards() {
   useEffect(() => {
     const els = [headRef.current, gridRef.current].filter(Boolean)
     const observer = new IntersectionObserver(
-      (entries) => entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in-view'); observer.unobserve(e.target) } }),
+      (entries) => entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.remove('opacity-0', 'translate-y-8')
+          observer.unobserve(e.target)
+        }
+      }),
       { threshold: 0.1 }
     )
     els.forEach(el => observer.observe(el))
@@ -52,7 +57,7 @@ export default function RoleCards() {
       <div className="max-w-7xl mx-auto">
         <div
           ref={headRef}
-          className="opacity-0 translate-y-8 transition-all duration-700 [.in-view_&]:opacity-100 [.in-view_&]:translate-y-0 mb-16"
+          className="opacity-0 translate-y-8 transition-all duration-700 mb-16"
         >
           <div className="flex items-center gap-4 mb-5">
             <div className="w-8 h-px bg-accent" aria-hidden="true" />
@@ -63,7 +68,7 @@ export default function RoleCards() {
           </h2>
         </div>
 
-        <div ref={gridRef} className="opacity-0 translate-y-8 transition-all duration-700 delay-150 [.in-view_&]:opacity-100 [.in-view_&]:translate-y-0 grid sm:grid-cols-2 lg:grid-cols-3 gap-px bg-border">
+        <div ref={gridRef} className="opacity-0 translate-y-8 transition-all duration-700 delay-150 grid sm:grid-cols-2 lg:grid-cols-3 gap-px bg-border">
           {services.map(({ num, title, description }) => (
             <div
               key={num}

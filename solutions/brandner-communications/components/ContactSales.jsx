@@ -10,7 +10,12 @@ export default function ContactSales() {
     const el = ref.current
     if (!el) return
     const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) { el.classList.add('in-view'); observer.disconnect() } },
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          el.classList.remove('opacity-0', 'translate-y-8')
+          observer.disconnect()
+        }
+      },
       { threshold: 0.1 }
     )
     observer.observe(el)
@@ -32,7 +37,7 @@ export default function ContactSales() {
   return (
     <section id="contact" className="bg-primary py-28 px-6" aria-labelledby="contact-heading">
       <div className="max-w-7xl mx-auto">
-        <div ref={ref} className="opacity-0 translate-y-8 transition-all duration-700 [.in-view_&]:opacity-100 [.in-view_&]:translate-y-0 grid lg:grid-cols-2 gap-20 items-start">
+        <div ref={ref} className="opacity-0 translate-y-8 transition-all duration-700 grid lg:grid-cols-2 gap-20 items-start">
 
           <div>
             <div className="flex items-center gap-4 mb-6">

@@ -42,7 +42,7 @@ export default function Stats() {
             {stats.map(({ value, label }, i) => (
               <div
                 key={label}
-                className="bg-primary p-10 opacity-0 translate-y-6 transition-all duration-700 [.in-view_&]:opacity-100 [.in-view_&]:translate-y-0"
+                className="bg-primary p-6 sm:p-10 opacity-0 translate-y-6 transition-all duration-700 [.in-view_&]:opacity-100 [.in-view_&]:translate-y-0"
                 style={{ transitionDelay: `${i * 100 + 200}ms` }}
               >
                 <div className="font-display font-bold text-5xl sm:text-6xl text-ink mb-2">{value}</div>

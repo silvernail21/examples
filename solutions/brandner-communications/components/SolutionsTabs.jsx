@@ -63,7 +63,12 @@ export default function SolutionsTabs() {
     const el = ref.current
     if (!el) return
     const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) { el.classList.add('in-view'); observer.disconnect() } },
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          el.classList.remove('opacity-0', 'translate-y-8')
+          observer.disconnect()
+        }
+      },
       { threshold: 0.1 }
     )
     observer.observe(el)
@@ -73,7 +78,7 @@ export default function SolutionsTabs() {
   return (
     <section id="work" className="bg-primary py-28 px-6" aria-labelledby="work-heading">
       <div className="max-w-7xl mx-auto">
-        <div ref={ref} className="opacity-0 translate-y-8 transition-all duration-700 [.in-view_&]:opacity-100 [.in-view_&]:translate-y-0 mb-16 flex flex-col sm:flex-row sm:items-end justify-between gap-6">
+        <div ref={ref} className="opacity-0 translate-y-8 transition-all duration-700 mb-16 flex flex-col sm:flex-row sm:items-end justify-between gap-6">
           <div>
             <div className="flex items-center gap-4 mb-5">
               <div className="w-8 h-px bg-accent" aria-hidden="true" />
