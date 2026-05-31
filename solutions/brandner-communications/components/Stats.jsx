@@ -1,81 +1,77 @@
-import { useEffect, useRef, useState } from 'react'
-
-const metrics = [
-  { value: '500+', label: 'Enterprise clients across 6 continents', sublabel: 'Active accounts' },
-  { value: '98%', label: 'Client retention rate year over year', sublabel: 'Retention' },
-  { value: '$2.4B', label: 'Revenue influenced through Brandner campaigns', sublabel: 'Revenue driven' },
-  { value: '150+', label: 'Countries reached with localized messaging', sublabel: 'Global reach' },
-  { value: '4.9/5', label: 'Average customer satisfaction score', sublabel: 'CSAT score' },
-  { value: '<2h', label: 'Average enterprise onboarding SLA response', sublabel: 'Response time' },
+const caseStudies = [
+  {
+    client: 'Technical Glass Products',
+    category: 'Fire-Rated Glass',
+    result: '#1 Most Specified',
+    description: "Started as a small Seattle glass sales office. Through long-term PR, advertising, and specification strategy with Brandner, TGP grew into North America's #1 most-specified fire-rated glass manufacturer.",
+    services: ['PR & Media Relations', 'Specification Marketing', 'Trade Advertising'],
+  },
+  {
+    client: 'DRICORE',
+    category: 'Basement Subfloor',
+    result: '96% avg. video view',
+    description: "Brandner created a YouTube ad for DRICORE's 'Trusted By' campaign featuring industry experts. The result: viewers watched an average of 96% of the video — a remarkable completion rate in the category.",
+    services: ['Video Production', 'Digital Advertising', 'Influencer Strategy'],
+  },
+  {
+    client: 'Drexel Metals',
+    category: 'Metal Roofing',
+    result: 'Pikes Peak Summit Complex',
+    description: "For the historic Pikes Peak Summit Complex project, Brandner developed a video case study combining key messaging with aerial drone footage — showcasing the product in one of the most recognizable settings in America.",
+    services: ['Video Production', 'PR', 'Case Study Development'],
+  },
 ]
 
-function useIntersection(ref) {
-  const [intersected, setIntersected] = useState(false)
-  useEffect(() => {
-    const el = ref.current
-    if (!el) return
-    const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) setIntersected(true) },
-      { threshold: 0.2 }
-    )
-    observer.observe(el)
-    return () => observer.disconnect()
-  }, [ref])
-  return intersected
-}
-
 export default function Stats() {
-  const ref = useRef(null)
-  const visible = useIntersection(ref)
-
   return (
-    <section
-      id="stats"
-      ref={ref}
-      className="bg-primary py-24 px-6"
-      aria-labelledby="stats-heading"
-    >
+    <section id="work" className="bg-white py-24 px-6" aria-labelledby="work-heading">
       <div className="max-w-7xl mx-auto">
         <div className="max-w-2xl mb-14">
-          <p className="text-cta text-sm font-semibold tracking-widest uppercase mb-3">By The Numbers</p>
-          <h2 id="stats-heading" className="text-3xl sm:text-4xl font-extrabold text-white leading-tight mb-4">
-            Results speak louder than promises
+          <p className="text-cta text-sm font-bold tracking-widest uppercase mb-3">Our Work</p>
+          <h2 id="work-heading" className="text-3xl sm:text-4xl font-extrabold text-brand-text leading-tight mb-4">
+            Results that outlast campaigns
           </h2>
-          <p className="text-slate-400 text-lg leading-relaxed">
-            Every number here is drawn from verified client outcomes and third-party audits. No cherry-picking.
+          <p className="text-stone-500 text-lg leading-relaxed">
+            We measure success in years, not impressions. Here's what long-term partnership with Brandner looks like.
           </p>
         </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {metrics.map(({ value, label, sublabel }, i) => (
-            <div
-              key={sublabel}
-              className={`bg-white/5 border border-white/10 rounded-3xl p-8 hover:bg-white/8 hover:border-white/20 transition-all duration-300 cursor-default ${
-                visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-              }`}
-              style={{ transitionDelay: `${i * 80}ms` }}
-            >
-              <div className="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-3">{sublabel}</div>
-              <div className="text-4xl sm:text-5xl font-extrabold text-white mb-3 animate-pulse-scale">{value}</div>
-              <p className="text-slate-400 text-sm leading-relaxed">{label}</p>
+        <div className="grid md:grid-cols-3 gap-6 mb-14">
+          {caseStudies.map(({ client, category, result, description, services }) => (
+            <div key={client} className="group bg-stone-50 border border-stone-200 rounded-3xl overflow-hidden hover:shadow-lg hover:border-stone-300 transition-all duration-300 cursor-default flex flex-col">
+              <div className="bg-primary p-6">
+                <div className="text-xs font-bold text-stone-400 uppercase tracking-widest mb-1">{category}</div>
+                <div className="text-white font-bold text-lg leading-tight mb-1">{client}</div>
+                <div className="text-cta font-extrabold text-2xl">{result}</div>
+              </div>
+              <div className="p-6 flex-1 flex flex-col">
+                <p className="text-stone-600 text-sm leading-relaxed mb-5 flex-1">{description}</p>
+                <div className="flex flex-wrap gap-2">
+                  {services.map(s => (
+                    <span key={s} className="bg-white border border-stone-200 text-stone-500 text-xs font-medium px-3 py-1 rounded-full">{s}</span>
+                  ))}
+                </div>
+              </div>
             </div>
           ))}
         </div>
 
-        <div className="mt-14 bg-cta/10 border border-cta/20 rounded-3xl p-8 flex flex-col sm:flex-row items-start sm:items-center gap-6">
+        <div className="bg-stone-50 border border-stone-200 rounded-3xl p-8 sm:p-10 flex flex-col sm:flex-row items-start sm:items-center gap-6">
           <div className="flex-1">
-            <h3 className="text-white font-bold text-xl mb-2">Independently verified. Peer-reviewed.</h3>
-            <p className="text-slate-400 text-sm leading-relaxed">
-              Brandner's performance data is audited annually by Deloitte. All client metrics are shared with consent and verified before publication.
+            <h3 className="font-bold text-xl text-brand-text mb-2">See the full portfolio</h3>
+            <p className="text-stone-500 text-sm leading-relaxed">
+              30 years of building products work across advertising, PR, video, digital, and more. Visit brandner.com to see the complete portfolio.
             </p>
           </div>
           <a
-            href="#contact"
-            className="flex-shrink-0 inline-flex items-center gap-2 bg-cta hover:bg-cta-hover text-white text-sm font-semibold px-6 py-3.5 rounded-xl transition-colors duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-primary"
+            href="https://www.brandner.com/construction-marketing-work"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex-shrink-0 inline-flex items-center gap-2 bg-primary hover:bg-stone-800 text-white text-sm font-semibold px-6 py-3.5 rounded-xl transition-colors duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
           >
-            View Case Studies
+            View Portfolio
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" aria-hidden="true">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
             </svg>
           </a>
         </div>

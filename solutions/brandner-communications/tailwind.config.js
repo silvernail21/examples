@@ -7,12 +7,12 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: '#0F172A',
-        secondary: '#334155',
-        cta: '#0369A1',
-        'cta-hover': '#0284C7',
-        'brand-bg': '#F8FAFC',
-        'brand-text': '#020617',
+        primary: '#1C1917',
+        secondary: '#78716C',
+        cta: '#EA580C',
+        'cta-hover': '#C2410C',
+        'brand-bg': '#FAFAFA',
+        'brand-text': '#1C1917',
       },
       fontFamily: {
         sans: ['Plus Jakarta Sans', 'sans-serif'],

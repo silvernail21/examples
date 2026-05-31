@@ -13,14 +13,11 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>Brandner Communications — Enterprise Communications Intelligence</title>
-        <meta
-          name="description"
-          content="Brandner delivers enterprise-grade communications intelligence for Fortune 500 companies. SOC 2, HIPAA compliant. 500+ clients. Contact Sales today."
-        />
+        <title>Brandner Communications — Building Products Marketing Agency</title>
+        <meta name="description" content="Full-service advertising and PR agency specializing in building products. 30+ years of expertise in commercial and residential building products marketing. Federal Way, WA." />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta property="og:title" content="Brandner Communications — Enterprise Communications Intelligence" />
-        <meta property="og:description" content="Communications that move markets. Trusted by 500+ enterprise clients worldwide." />
+        <meta property="og:title" content="Brandner Communications — Building Products Marketing Agency" />
+        <meta property="og:description" content="Proud to be different for 30+ years. Full-service advertising, PR, and digital marketing for the building industry." />
         <meta property="og:type" content="website" />
         <link rel="icon" href="/favicon.ico" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
