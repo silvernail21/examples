@@ -7,36 +7,50 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: '#1C1917',
-        secondary: '#78716C',
-        cta: '#EA580C',
-        'cta-hover': '#C2410C',
-        'brand-bg': '#FAFAFA',
-        'brand-text': '#1C1917',
+        primary: '#080808',
+        surface: '#111111',
+        'surface-2': '#1A1A1A',
+        border: '#222222',
+        accent: '#C8A96E',
+        'accent-hover': '#B8966A',
+        ink: '#F0EDE6',
+        muted: '#888888',
       },
       fontFamily: {
-        sans: ['Plus Jakarta Sans', 'sans-serif'],
+        display: ['"Bodoni Moda"', 'Georgia', 'serif'],
+        sans: ['Jost', 'sans-serif'],
       },
       keyframes: {
-        'fade-up': {
-          '0%': { opacity: '0', transform: 'translateY(20px)' },
+        'slide-up': {
+          '0%': { opacity: '0', transform: 'translateY(60px)' },
           '100%': { opacity: '1', transform: 'translateY(0)' },
         },
-        'pulse-scale': {
-          '0%, 100%': { transform: 'scale(1)' },
-          '50%': { transform: 'scale(1.04)' },
+        'fade-in': {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+        'ken-burns': {
+          '0%': { transform: 'scale(1)' },
+          '100%': { transform: 'scale(1.08)' },
         },
         marquee: {
           '0%': { transform: 'translateX(0%)' },
           '100%': { transform: 'translateX(-50%)' },
         },
+        'reveal-up': {
+          '0%': { opacity: '0', transform: 'translateY(30px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
       },
       animation: {
-        'fade-up': 'fade-up 0.6s ease-out forwards',
-        'pulse-scale': 'pulse-scale 2s ease-in-out infinite',
-        marquee: 'marquee 28s linear infinite',
+        'slide-up': 'slide-up 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+        'fade-in': 'fade-in 0.8s ease forwards',
+        'ken-burns': 'ken-burns 18s ease-out infinite alternate',
+        marquee: 'marquee 32s linear infinite',
+        'reveal-up': 'reveal-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards',
       },
     },
   },
   plugins: [],
 }
+
