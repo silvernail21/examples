@@ -1,31 +1,22 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300;1,9..40,400&family=Instrument+Serif:ital@0;1&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  html {
-    scroll-behavior: smooth;
-  }
-
-  body {
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    background-color: #F8FAFC;
-    color: #020617;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
-@layer utilities {
-  @media (prefers-reduced-motion: reduce) {
-    .animate-fade-up,
-    .animate-pulse-scale,
-    .animate-marquee {
-      animation: none !important;
-    }
+body {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  background-color: #011219;
+  color: #F9F5F1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 
-    * {
-      transition-duration: 0.01ms !important;
-    }
-  }
+::selection {
+  background: #EC0C2A;
+  color: #F9F5F1;
 }

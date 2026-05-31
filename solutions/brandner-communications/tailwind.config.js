@@ -7,34 +7,37 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: '#0F172A',
-        secondary: '#334155',
-        cta: '#0369A1',
-        'cta-hover': '#0284C7',
-        'brand-bg': '#F8FAFC',
-        'brand-text': '#020617',
+        primary: '#011219',
+        surface: '#051D28',
+        'surface-2': '#082535',
+        border: '#0F3248',
+        accent: '#EC0C2A',
+        'accent-hover': '#C80A23',
+        mint: '#24F1E3',
+        ink: '#F9F5F1',
+        muted: '#7A8FA0',
       },
       fontFamily: {
-        sans: ['Plus Jakarta Sans', 'sans-serif'],
+        display: ['"Instrument Serif"', 'Georgia', 'serif'],
+        sans: ['"DM Sans"', 'system-ui', 'sans-serif'],
       },
       keyframes: {
-        'fade-up': {
-          '0%': { opacity: '0', transform: 'translateY(20px)' },
-          '100%': { opacity: '1', transform: 'translateY(0)' },
-        },
-        'pulse-scale': {
-          '0%, 100%': { transform: 'scale(1)' },
-          '50%': { transform: 'scale(1.04)' },
-        },
         marquee: {
           '0%': { transform: 'translateX(0%)' },
           '100%': { transform: 'translateX(-50%)' },
         },
+        'scroll-line': {
+          '0%': { transform: 'translateY(-100%)' },
+          '100%': { transform: 'translateY(350%)' },
+        },
+        'count-roll': {
+          '0%': { transform: 'translateY(0%)' },
+          '100%': { transform: 'translateY(-100%)' },
+        },
       },
       animation: {
-        'fade-up': 'fade-up 0.6s ease-out forwards',
-        'pulse-scale': 'pulse-scale 2s ease-in-out infinite',
-        marquee: 'marquee 28s linear infinite',
+        marquee: 'marquee 36s linear infinite',
+        'scroll-line': 'scroll-line 1.8s ease-in-out infinite',
       },
     },
   },

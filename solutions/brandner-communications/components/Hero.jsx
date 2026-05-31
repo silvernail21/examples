@@ -1,131 +1,133 @@
-import { useEffect, useRef, useState } from 'react'
-
-const badges = [
-  {
-    label: 'SOC 2 Type II',
-    icon: (
-      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" aria-hidden="true">
-        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
-      </svg>
-    ),
-  },
-  {
-    label: 'ISO 27001 Certified',
-    icon: (
-      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" aria-hidden="true">
-        <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.562.562 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
-      </svg>
-    ),
-  },
-  {
-    label: 'HIPAA Compliant',
-    icon: (
-      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" aria-hidden="true">
-        <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
-      </svg>
-    ),
-  },
-  {
-    label: 'G2 Leader 2025',
-    icon: (
-      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" aria-hidden="true">
-        <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 18.75h-9m9 0a3 3 0 013 3h-15a3 3 0 013-3m9 0v-3.375c0-.621-.503-1.125-1.125-1.125h-.871M7.5 18.75v-3.375c0-.621.504-1.125 1.125-1.125h.872m5.007 0H9.497m5.007 0a7.454 7.454 0 01-.982-3.172M9.497 14.25a7.454 7.454 0 00.981-3.172M5.25 4.236c-.982.143-1.954.317-2.916.52A6.003 6.003 0 007.73 9.728M5.25 4.236V4.5c0 2.108.966 3.99 2.48 5.228M5.25 4.236V2.721C7.456 2.41 9.71 2.25 12 2.25c2.291 0 4.545.16 6.75.47v1.516M7.73 9.728a6.726 6.726 0 002.748 1.35m8.272-6.842V4.5c0 2.108-.966 3.99-2.48 5.228m2.48-5.492a46.32 46.32 0 012.916.52 6.003 6.003 0 01-5.395 4.972m0 0a6.726 6.726 0 01-2.749 1.35m0 0a6.772 6.772 0 01-3.044 0" />
-      </svg>
-    ),
-  },
-]
-
-const stats = [
-  { value: '500+', label: 'Enterprise Clients' },
-  { value: '98%', label: 'Retention Rate' },
-  { value: '$2.4B', label: 'Revenue Driven' },
-  { value: '150+', label: 'Countries Reached' },
-]
+import { useEffect, useRef } from 'react'
+import gsap from 'gsap'
 
 export default function Hero() {
-  const [visible, setVisible] = useState(false)
-  const ref = useRef(null)
+  const v1Ref = useRef(null)
+  const v2Ref = useRef(null)
+  const bgRef = useRef(null)
+  const contentRef = useRef(null)
+  const scrollRef = useRef(null)
 
   useEffect(() => {
-    const timer = setTimeout(() => setVisible(true), 100)
-    return () => clearTimeout(timer)
+    gsap.set(v2Ref.current, { opacity: 0 })
+    gsap.set(bgRef.current, { clipPath: 'circle(0% at 50% 50%)' })
+    gsap.set(contentRef.current, { opacity: 0, y: 28 })
+    gsap.set(scrollRef.current, { opacity: 0 })
+
+    const letters = v1Ref.current.querySelectorAll('span')
+    gsap.set(letters, { opacity: 0, y: 18 })
+
+    const tl = gsap.timeline({ delay: 0.2 })
+
+    tl
+      .to(letters, {
+        opacity: 1,
+        y: 0,
+        duration: 0.45,
+        stagger: 0.055,
+        ease: 'power3.out',
+      })
+      .to({}, { duration: 0.75 })
+      // Morph BRANDNER → BR&NER
+      .to(v1Ref.current, { opacity: 0, duration: 0.35, ease: 'power2.in' })
+      .to(v2Ref.current, { opacity: 1, duration: 0.45, ease: 'power2.out' }, '-=0.1')
+      .to({}, { duration: 0.55 })
+      // Iris wipe
+      .to(bgRef.current, {
+        clipPath: 'circle(150% at 50% 50%)',
+        duration: 1.35,
+        ease: 'power2.inOut',
+      })
+      // Reveal content + scroll indicator
+      .to(contentRef.current, {
+        opacity: 1,
+        y: 0,
+        duration: 0.85,
+        ease: 'power2.out',
+      }, '-=0.55')
+      .to(scrollRef.current, { opacity: 1, duration: 0.6 }, '-=0.3')
+
+    return () => tl.kill()
   }, [])
+
+  const logoClass = 'font-display font-bold leading-none tracking-tight text-ink inline-block'
+  const size = 'text-[15vw] sm:text-[13vw] lg:text-[12vw]'
 
   return (
     <section
       id="main"
-      className="relative min-h-screen bg-primary flex flex-col justify-center overflow-hidden"
+      className="relative min-h-screen flex flex-col justify-center overflow-hidden bg-primary"
       aria-label="Hero"
     >
-      <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-cta/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-secondary/20 rounded-full blur-3xl" />
+      {/* Background revealed by iris wipe */}
+      <div
+        ref={bgRef}
+        className="absolute inset-0"
+        aria-hidden="true"
+        style={{ clipPath: 'circle(0% at 50% 50%)' }}
+      >
+        <img
+          src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1920&q=80&fit=crop"
+          alt=""
+          className="w-full h-full object-cover opacity-35"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-primary/50 via-primary/30 to-primary/75" />
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-6 pt-36 pb-24 w-full">
-        <div
-          ref={ref}
-          className={`transition-all duration-700 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}
-        >
-          <div className="flex flex-wrap gap-2 mb-8">
-            {badges.map(({ label, icon }) => (
-              <div
-                key={label}
-                className="flex items-center gap-1.5 bg-white/5 border border-white/10 text-slate-300 text-xs font-medium px-3 py-1.5 rounded-full hover:bg-white/10 hover:border-white/20 hover:scale-105 transition-all duration-200 cursor-default"
-                role="img"
-                aria-label={label}
-              >
-                <span className="text-cta">{icon}</span>
-                {label}
-              </div>
+      {/* Logo + Content */}
+      <div className="relative z-10 flex flex-col items-center text-center px-4">
+        {/* Logo morph */}
+        <div className="relative mb-10 sm:mb-14" aria-label="Brandner">
+          {/* V1: BRANDNER (individual letters for stagger) */}
+          <div
+            ref={v1Ref}
+            className="flex items-baseline justify-center"
+            aria-hidden="true"
+          >
+            {['B', 'R', 'A', 'N', 'D', 'N', 'E', 'R'].map((l, i) => (
+              <span key={i} className={`${logoClass} ${size}`}>{l}</span>
             ))}
           </div>
 
-          <div className="max-w-4xl">
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-extrabold text-white leading-[1.1] tracking-tight mb-6">
-              Communications That{' '}
-              <span className="text-cta">Move Markets</span>
-            </h1>
-            <p className="text-lg sm:text-xl text-slate-400 leading-relaxed max-w-2xl mb-10">
-              Brandner delivers enterprise-grade communications intelligence—helping Fortune 500 companies craft narratives that build trust, accelerate growth, and define industry leadership.
-            </p>
-
-            <div className="flex flex-col sm:flex-row gap-4 mb-16">
-              <a
-                href="#contact"
-                className="inline-flex items-center justify-center gap-2 bg-cta hover:bg-cta-hover text-white font-semibold px-8 py-4 rounded-xl text-base transition-colors duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-primary"
-              >
-                Contact Sales
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-                </svg>
-              </a>
-              <a
-                href="#solutions"
-                className="inline-flex items-center justify-center gap-2 text-slate-300 hover:text-white font-semibold px-8 py-4 rounded-xl text-base border border-white/20 hover:border-white/40 hover:bg-white/5 transition-all duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-cta"
-              >
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.91 11.672a.375.375 0 010 .656l-5.603 3.113a.375.375 0 01-.557-.328V8.887c0-.286.307-.466.557-.327l5.603 3.112z" />
-                </svg>
-                Explore Solutions
-              </a>
-            </div>
+          {/* V2: BR&NER (cross-fades in on morph) */}
+          <div
+            ref={v2Ref}
+            className={`${logoClass} ${size} absolute inset-0 flex items-center justify-center whitespace-nowrap`}
+          >
+            BR<em className="text-accent not-italic">&amp;</em>NER
           </div>
+        </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6">
-            {stats.map(({ value, label }) => (
-              <div
-                key={label}
-                className="bg-white/5 border border-white/10 rounded-2xl p-5 hover:bg-white/8 hover:border-white/20 transition-all duration-200 cursor-default"
-              >
-                <div className="text-3xl sm:text-4xl font-extrabold text-white mb-1 animate-pulse-scale">
-                  {value}
-                </div>
-                <div className="text-slate-400 text-sm font-medium">{label}</div>
-              </div>
-            ))}
+        {/* Tagline + CTAs */}
+        <div ref={contentRef} className="opacity-0">
+          <p className="text-muted text-[10px] sm:text-xs font-light tracking-[0.45em] uppercase mb-10">
+            Creative Advertising Agency
+          </p>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6">
+            <a
+              href="#work"
+              className="bg-accent hover:bg-accent-hover text-ink text-[10px] sm:text-xs font-medium tracking-[0.25em] uppercase px-10 py-4 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-primary"
+            >
+              View Our Work
+            </a>
+            <a
+              href="#contact"
+              className="text-muted hover:text-ink text-[10px] sm:text-xs font-medium tracking-[0.25em] uppercase transition-colors duration-300 focus:outline-none focus:underline"
+            >
+              Start a Project &rarr;
+            </a>
           </div>
+        </div>
+      </div>
+
+      {/* Scroll indicator */}
+      <div
+        ref={scrollRef}
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-0"
+        aria-hidden="true"
+      >
+        <div className="w-px h-12 bg-border relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-full h-[40%] bg-mint animate-scroll-line" />
         </div>
       </div>
     </section>
