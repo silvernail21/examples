@@ -2961,9 +2961,52 @@
       .footer-legal { justify-content: center; flex-wrap: wrap; }
       .footer-social { justify-content: center; }
     }
+
+    /* ── Noise / grain overlay ───────────────────────────────────────────────── */
+    #grain-layer {
+      position: fixed; inset: 0; z-index: 9990;
+      pointer-events: none; opacity: 0.052; mix-blend-mode: overlay;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 256px 256px;
+    }
+
+    /* ── Custom cursor ───────────────────────────────────────────────────────── */
+    @media (pointer: fine) {
+      html.has-cursor * { cursor: none !important; }
+    }
+    #cursor-dot {
+      position: fixed; z-index: 99997; top: 0; left: 0;
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--cream); pointer-events: none;
+      transform: translate(-50%, -50%); will-change: transform;
+      transition: width .22s var(--ease-nav), height .22s var(--ease-nav),
+                  background .22s var(--ease-nav), opacity .25s;
+      opacity: 0;
+    }
+    #cursor-ring {
+      position: fixed; z-index: 99996; top: 0; left: 0;
+      width: 40px; height: 40px; border-radius: 50%;
+      border: 1.5px solid rgba(249,245,241,0.38);
+      pointer-events: none; transform: translate(-50%, -50%);
+      will-change: transform;
+      transition: width .35s var(--ease-nav), height .35s var(--ease-nav),
+                  border-color .25s, background .25s, opacity .25s;
+      opacity: 0;
+    }
+    html.has-cursor #cursor-dot,
+    html.has-cursor #cursor-ring  { opacity: 1; }
+    html.has-cursor.cursor-hover #cursor-dot  { width: 12px; height: 12px; background: var(--red); }
+    html.has-cursor.cursor-hover #cursor-ring { width: 60px; height: 60px; border-color: rgba(236,12,42,0.45); }
+    @media (prefers-reduced-motion: reduce) {
+      #grain-layer, #cursor-dot, #cursor-ring { display: none; }
+    }
 </style>
 </head>
 <body>
+  <!-- grain overlay + cursors — pointer-events: none, never interfere with clicks -->
+  <div id="grain-layer" aria-hidden="true"></div>
+  <div id="cursor-dot"  aria-hidden="true"></div>
+  <div id="cursor-ring" aria-hidden="true"></div>
   <div id="page-preloader" aria-hidden="true">
     <div class="preloader-inner">
       <div class="preloader-amp-wrap" aria-hidden="true">
@@ -3549,6 +3592,7 @@
       </div>
     </section>
 
+  <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/bundled/lenis.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   <script>
@@ -4254,6 +4298,7 @@
       lockBusy = false;
     }
     function freezeScroll() {
+      window.__bc_lenis?.stop();
       lockedY = window.scrollY;
       window.addEventListener('wheel',       blockWheel,       { passive: false });
       document.addEventListener('touchmove', blockTouchMove,   { passive: false });
@@ -4265,6 +4310,8 @@
       window.removeEventListener('wheel',       blockWheel);
       document.removeEventListener('touchmove', blockTouchMove);
       window.removeEventListener('scroll',      enforceScrollLock);
+      window.__bc_lenis?.scrollTo(window.scrollY, { immediate: true });
+      window.__bc_lenis?.start();
     }
 
     window.addEventListener('scroll',     () => { hasScrolled = true; }, { once: true });
@@ -5712,6 +5759,97 @@
       }
     });
   })();
+</script>
+<script>
+/* ── Lenis smooth scroll ─────────────────────────────────────────────────────
+   Initialized stopped — hero freezeScroll/thawScroll control it via
+   window.__bc_lenis. Only enabled on pointer-fine (desktop) devices.     */
+(function () {
+  var isLowPower = document.documentElement.classList.contains('is-low-power');
+  var isTouch    = !window.matchMedia('(pointer: fine)').matches;
+  if (isLowPower || isTouch || typeof Lenis === 'undefined' || typeof gsap === 'undefined') return;
+
+  var lenis = new Lenis({ lerp: 0.1, wheelMultiplier: 0.9 });
+  window.__bc_lenis = lenis;
+
+  lenis.on('scroll', function () {
+    if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.update();
+  });
+
+  gsap.ticker.add(function (time) { lenis.raf(time * 1000); });
+  gsap.ticker.lagSmoothing(0);
+
+  // Start stopped — thawScroll() resumes it once the hero is done.
+  // If user lands past the hero (e.g. direct link), start immediately.
+  var heroEl = document.getElementById('hero-scroll');
+  if (!heroEl || window.scrollY > (heroEl.offsetHeight || window.innerHeight)) {
+    lenis.start();
+  } else {
+    lenis.stop();
+    // Safety: resume after 12s regardless (covers edge-cases where hero
+    // animation doesn't fire on slow connections).
+    setTimeout(function () { lenis.start(); }, 12000);
+  }
+})();
+
+/* ── Custom cursor ───────────────────────────────────────────────────────────
+   Dot tracks at near-instant speed; ring follows with a deliberate lag.
+   Adds .cursor-hover to <html> when over any interactive element.       */
+(function () {
+  if (!window.matchMedia('(pointer: fine)').matches) return;
+  if (typeof gsap === 'undefined') return;
+
+  var html = document.documentElement;
+  var dot  = document.getElementById('cursor-dot');
+  var ring = document.getElementById('cursor-ring');
+  if (!dot || !ring) return;
+
+  html.classList.add('has-cursor');
+
+  var dotX  = gsap.quickTo(dot,  'x', { duration: 0.08, ease: 'none' });
+  var dotY  = gsap.quickTo(dot,  'y', { duration: 0.08, ease: 'none' });
+  var ringX = gsap.quickTo(ring, 'x', { duration: 0.52, ease: 'power3.out' });
+  var ringY = gsap.quickTo(ring, 'y', { duration: 0.52, ease: 'power3.out' });
+
+  window.addEventListener('mousemove', function (e) {
+    dotX(e.clientX); dotY(e.clientY);
+    ringX(e.clientX); ringY(e.clientY);
+  }, { passive: true });
+
+  document.querySelectorAll('a, button, [role="button"], label, input, select, textarea').forEach(function (el) {
+    el.addEventListener('mouseenter', function () { html.classList.add('cursor-hover'); });
+    el.addEventListener('mouseleave', function () { html.classList.remove('cursor-hover'); });
+  });
+
+  document.addEventListener('mouseleave', function () {
+    gsap.to([dot, ring], { opacity: 0, duration: 0.2, overwrite: true });
+  });
+  document.addEventListener('mouseenter', function () {
+    gsap.to([dot, ring], { opacity: 1, duration: 0.2, overwrite: true });
+  });
+})();
+
+/* ── Magnetic buttons ────────────────────────────────────────────────────────
+   CTAs attract the cursor on hover and spring back elastically on leave. */
+(function () {
+  if (!window.matchMedia('(pointer: fine)').matches) return;
+  if (typeof gsap === 'undefined') return;
+
+  var PULL = 0.36;
+  document.querySelectorAll('.nav-cta, .footer-cta-btn, .wtw-btn, .testi-cta, .drawer-cta').forEach(function (el) {
+    el.addEventListener('mousemove', function (e) {
+      var r = el.getBoundingClientRect();
+      gsap.to(el, {
+        x: (e.clientX - (r.left + r.width  * 0.5)) * PULL,
+        y: (e.clientY - (r.top  + r.height * 0.5)) * PULL,
+        duration: 0.4, ease: 'power3.out', overwrite: true,
+      });
+    });
+    el.addEventListener('mouseleave', function () {
+      gsap.to(el, { x: 0, y: 0, duration: 0.65, ease: 'elastic.out(1, 0.4)', overwrite: true });
+    });
+  });
+})();
 </script>
 <script>
 // Scroll progress bar
